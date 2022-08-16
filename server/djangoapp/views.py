@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
@@ -14,7 +13,14 @@ import json
 logger = logging.getLogger(__name__)
 
 
+from django.shortcuts import render
+  
 # Create your views here.
+def get_static(request):
+      
+    # render function takes argument  - request
+    # and return HTML as response
+    return render(request, "home.html")
 
 
 # Create an `about` view to render a static about page
