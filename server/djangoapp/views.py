@@ -22,7 +22,9 @@ def get_static(request):
     # and return HTML as response
     return render(request, "home.html")
 
+def get_about(request):
 
+    return render(request, "about.html")
 # Create an `about` view to render a static about page
 # def about(request):
 # ...
