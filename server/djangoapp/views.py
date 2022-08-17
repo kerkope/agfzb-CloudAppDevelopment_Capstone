@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic.base import View
 # from .models import related models
-# from .restapis import related methods
+#from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
 from django.views.generic import TemplateView
 from django.contrib import messages
@@ -12,16 +13,14 @@ import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
-
-from django.shortcuts import render
   
 # Create your views here.
+
 class HomePageView(TemplateView):
-    template_name = "home.html"
+    template_name = 'home.html'
 
 class AboutPageView(TemplateView):
-    template_name = "about.html"
+    template_name = 'about.html' 
 
 
 # Create an `about` view to render a static about page

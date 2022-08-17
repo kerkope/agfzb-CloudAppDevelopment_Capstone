@@ -1,11 +1,13 @@
-from .views import HomePageView, AboutPageView
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 from django.contrib import admin
 from django.urls import path, include
+from .views import HomePageView
 
 app_name = 'djangoapp'
+
+
 urlpatterns = [
     # route is a string contains a URL pattern
     # view refers to the view function
@@ -21,8 +23,8 @@ urlpatterns = [
 
     # path for logout
 
-    path("", HomePageView.as_view(), name="home"),
-    path("about/", AboutPageView.as_view(), name="about"),
+    path('',views.HomePageView.as_view(),name='home'),
+    path('about/',views.AboutPageView.as_view(),name='about'),
 
     # path for dealer reviews view
 
