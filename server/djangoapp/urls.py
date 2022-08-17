@@ -1,4 +1,4 @@
-from django.urls import path
+from .views import HomePageView, AboutPageView
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
@@ -21,8 +21,8 @@ urlpatterns = [
 
     # path for logout
 
-    path('', view = views.get_static, name='home'),
-    path('about/', view = views.get_about, name='about'),
+    path("", HomePageView.as_view(), name="home"),
+    path("about/", AboutPageView.as_view(), name="about"),
 
     # path for dealer reviews view
 

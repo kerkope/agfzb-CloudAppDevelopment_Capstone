@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
+from django.views.generic import TemplateView
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -16,15 +17,13 @@ logger = logging.getLogger(__name__)
 from django.shortcuts import render
   
 # Create your views here.
-def get_static(request):
-      
-    # render function takes argument  - request
-    # and return HTML as response
-    return render(request, "home.html")
+class HomePageView(TemplateView):
+    template_name = "home.html"
 
-def get_about(request):
+class AboutPageView(TemplateView):
+    template_name = "about.html"
 
-    return render(request, "about.html")
+
 # Create an `about` view to render a static about page
 # def about(request):
 # ...
