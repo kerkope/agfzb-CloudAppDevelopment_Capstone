@@ -27,7 +27,11 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "hunterschwagercardealer.us-east.cf.appdomain.cloud",
+    "127.0.0.1",
+]
 
 
 # Application definition
