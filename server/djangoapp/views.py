@@ -25,14 +25,8 @@ class AboutPageView(TemplateView):
 class ContactPageView(TemplateView):
     template_name = 'contact.html' 
 
-
-# Create an `about` view to render a static about page
-# def about(request):
-# ...
-
-
-# Create a `contact` view to return a static contact page
-#def contact(request):
+class LoginPageView(TemplateView):
+    template_name = 'login.html' 
 
 # Create a `login_request` view to handle sign in request
 # def login_request(request):
@@ -47,6 +41,7 @@ class ContactPageView(TemplateView):
 # ...
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
+
 def get_dealerships(request):
     context = {}
     if request.method == "GET":

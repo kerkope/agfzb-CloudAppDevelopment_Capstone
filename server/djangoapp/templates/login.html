@@ -1,0 +1,37 @@
+{% extends 'template.html' %}
+
+{% block internalnav1 %}
+http://hunterschwagercardealer.us-east.cf.appdomain.cloud/
+{% endblock internalnav1 %}
+
+{% block navlink1 %}
+Home
+{% endblock navlink1 %}
+
+{% block internalnav2 %}
+http://hunterschwagercardealer.us-east.cf.appdomain.cloud/about/
+{% endblock internalnav2 %}
+
+{% block navlink2 %}
+About
+{% endblock navlink2 %}
+
+{% block internalnav3 %}
+http://hunterschwagercardealer.us-east.cf.appdomain.cloud/contact
+{% endblock internalnav3 %}
+
+{% block navlink3 %}
+Contact
+{% endblock navlink3 %}
+
+{% block content %} 
+<h1>Login Page</h1>
+{% endblock content %} 
+
+
+<h2>Log In</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+</form>
