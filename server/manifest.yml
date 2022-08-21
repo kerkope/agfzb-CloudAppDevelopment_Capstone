@@ -1,11 +1,11 @@
   applications:
   - name: djangoapp
     routes:
-      - route: hunterschwagercardealer.us-east.cf.appdomain.cloud
+      - route: hunterschwagercardealer.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: djangoapp-static
     routes:
-      - route: hunterschwagercardealer.us-east.cf.appdomain.cloud/static
+      - route: hunterschwagercardealer.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
