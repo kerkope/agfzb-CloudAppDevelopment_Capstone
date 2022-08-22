@@ -1,29 +1,17 @@
 {% extends 'template.html' %}
 
 {% block internalnav1 %}
-hunterschwagercardealer.mybluemix.net/
+<a href="{% url 'djangoapp:home' %}">Home</a>
 {% endblock internalnav1 %}
 
-{% block navlink1 %}
-Home
-{% endblock navlink1 %}
-
 {% block internalnav2 %}
-hunterschwagercardealer.mybluemix.net/about
+<a href="{% url 'djangoapp:about' %}">About</a>
 {% endblock internalnav2 %}
 
-{% block navlink2 %}
-About
-{% endblock navlink2 %}
-
 {% block internalnav3 %}
-hunterschwagercardealer.mybluemix.net/login
+<a href="{% url 'djangoapp:signup' %}">Sign Up</a>
 {% endblock internalnav3 %}
 
-{% block navlink3 %}
-Login
-{% endblock navlink3 %}
-
 {% block content %} 
-<h1>Login Page</h1>
+<h1>Contact Page</h1>
 {% endblock content %} 

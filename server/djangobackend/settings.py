@@ -29,7 +29,7 @@ APPEND_SLASH = True
 
 ALLOWED_HOSTS = [
     "localhost",
-    "hunterschwagercardealer.mybluemix.net",
+    "hunterschwagercardealer.us-south.cf.appdomain.cloud",
     "127.0.0.1",
 ]
 

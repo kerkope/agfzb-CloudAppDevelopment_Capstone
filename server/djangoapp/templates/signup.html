@@ -1,0 +1,22 @@
+{% extends 'template.html' %}
+
+{% block internalnav1 %}
+<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/">Home</a>
+{% endblock internalnav1 %}
+
+{% block internalnav2 %}
+<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/about">About</a>
+{% endblock internalnav2 %}
+
+{% block internalnav3 %}
+<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/contact">Contact</a>
+{% endblock internalnav3 %}
+
+{% block content %} 
+<h2>Sign up</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
+{% endblock content %} 
