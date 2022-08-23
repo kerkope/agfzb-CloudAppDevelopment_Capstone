@@ -1,15 +1,15 @@
 {% extends 'template.html' %}
 
 {% block internalnav1 %}
-<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/">Home</a>
+<a href="{% url 'djangoapp:home' %}">Home</a>
 {% endblock internalnav1 %}
 
 {% block internalnav2 %}
-<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/about">About</a>
+<a href="{% url 'djangoapp:about' %}">About</a>
 {% endblock internalnav2 %}
 
 {% block internalnav3 %}
-<a href="https://hunterschwag-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/contact">Contact</a>
+<a href="{% url 'djangoapp:contact' %}">Contact</a>
 {% endblock internalnav3 %}
 
 {% block content %} 
