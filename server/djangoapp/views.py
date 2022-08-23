@@ -55,7 +55,7 @@ def login_request(request):
             return redirect('/')
         else:
             # If not, return to login page again
-            return render(request, '/', context)
+            return render(request, 'registration/login.html', context)
     else:
         return render(request, '/', context)
 

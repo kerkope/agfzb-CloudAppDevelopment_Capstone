@@ -1,7 +1,7 @@
 {% extends 'template.html' %}
 
 {% block internalnav1 %}
-<a href="{% url 'djangoapp:signup' %}">Sign Up</a>
+<a href="{% url 'djangoapp:home' %}">Home</a>
 {% endblock internalnav1 %}
 
 {% block internalnav2 %}
@@ -13,5 +13,10 @@
 {% endblock internalnav3 %}
 
 {% block content %} 
-<h1>Login Page</h1>
+<h2>Sign up</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
 {% endblock content %} 
