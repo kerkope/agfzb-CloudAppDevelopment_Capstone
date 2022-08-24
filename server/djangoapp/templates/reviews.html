@@ -1,51 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+{% extends 'review_template.html' %}
 
-</head>
-    <body>
-       <h1>Add review for: {{dealer.full_name}}</h1>
-    <p>Dealer id is: {{dealer_id}}</p>
-    <form action="{% url 'djangoapp:reviews'%}" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="content">Enter the review content:</label>
-            <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="purchasecheck"> Has purchased the car from this dealership?</label>
-            <input type="checkbox" name="purchasecheck" id="purchasecheck">
-        </div>
-        <div class="form-group">
-            <label for="car-make">Car make:</label>
-            <input type="text" name="car-make" placeholder="eg Ford">
-            <label for="car-model">Car model:</label>
-            <input type="text" name="car-model" placeholder="eg Fiesta">
-            <label for="car-year">Car year:</label>
-            <input type="number" min="1982" step="1" name="car-year">
+{% block internalnav1 %}
+<a href="{% url 'djangoapp:signup' %}">Sign Up</a>
+{% endblock internalnav1 %}
 
-        </div>
-        <div class="form-group">
-            <label for="puchasedate">Select your purchase date:</label>
-            <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
-        </div>
+{% block internalnav2 %}
+<a href="{% url 'djangoapp:home' %}">Home</a>
+{% endblock internalnav2 %}
 
-            <input class="btn btn-success btn-block" type="submit" value="submit">
+{% block internalnav3 %}
+<a href="{% url 'djangoapp:about' %}">About</a>
+{% endblock internalnav3 %}
 
-    </form>
-
-
-    <script type="text/javascript">
-        $('.date-own').datepicker({
-           format: 'mm/dd/yyyy'
-         });
-   </script>
-    </body>
-</html>
+{% block internalnav4 %}
+<a href="{% url 'djangoapp:contact' %}">Contact Us</a>
+{% endblock internalnav4 %}
