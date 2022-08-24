@@ -1,4 +1,8 @@
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db import models
+from django.core import serializers
+from django.utils.timezone import now
+import uuid
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic.base import View
@@ -94,7 +98,7 @@ def get_dealerships(request):
         url = "https://6dfaa0fe.us-south.apigw.appdomain.cloud/api/dealership"
         dealerships = get_dealers_from_cf(url)
         context["dealership_list"] = dealerships
-        return render(request, 'djangoapp/index.html', context)
+        return render(request, 'djangoapp/template.html', context)
 
 def get_dealer_details(request, id):
     if request.method == "GET":
