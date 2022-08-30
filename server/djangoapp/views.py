@@ -9,7 +9,7 @@ from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django import forms
 from django.views import generic
-# from .models import related models
+#from .models import related models
 #from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm
