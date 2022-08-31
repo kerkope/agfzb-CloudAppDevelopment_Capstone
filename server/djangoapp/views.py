@@ -92,7 +92,7 @@ def register(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 
-def get_dealerships(request):
+def get_all_dealerships(request):
     if request.method == "GET":
         context = {}
         url = "https://6dfaa0fe.us-south.apigw.appdomain.cloud/api/dealership"
@@ -152,12 +152,4 @@ def add_review(request, id):
             review_post_url = "https://6dfaa0fe.us-south.apigw.appdomain.cloud/api/dealership"
             post_request(review_post_url, new_payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)
-
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
-
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
 
