@@ -90,10 +90,19 @@ def register(request):
         return render(request, 'signup.html', context)
         return render(request, 'signup.html', {})
 
-def get_all_dealerships(request):
-    context = {}
+def get_dealerships(request):
     if request.method == "GET":
-        return render(request, 'djangoapp/home.html', context)
+        context = {}
+        url = "https://6dfaa0fe.us-south.apigw.appdomain.cloud/api/dealership"
+        Get dealers from the URL
+        print("Url", url)
+        dealerships = get_dealers_from_cf(url)
+        Concat all dealer's short name
+        context["dealers"] = dealerships
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        Return a list of dealer short name
+        return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 
 
