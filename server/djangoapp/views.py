@@ -9,7 +9,6 @@ from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django import forms
 from django.views import generic
-from .restapi import get_dealers_from_cf 
 #from .models import related models
 #from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
