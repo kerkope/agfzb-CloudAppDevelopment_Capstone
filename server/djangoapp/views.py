@@ -87,7 +87,7 @@ def register(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        url = 'https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/dealer-get'
+        url = ''
         # Get dealers from the URL
         context = {"dealerships": restapis.get_dealers_from_cf(url)}
         # Concat all dealer's short name
@@ -97,7 +97,7 @@ def get_dealerships(request):
 # 1 - https://5b93346d.us-south.apigw.appdomain.cloud/reviews/get-review
 # 2 - https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/dealer-get?dealerId={0}
 # 3 - https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/reviews/review-post
-
+# 4 - https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/dealer-get
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
