@@ -38,7 +38,7 @@ def get_dealerships_from_cf():
     results = []
     json_result = get_request(API_URL_DEALERSHIP_GET)
     if json_result:
-        dealerships = json_result["entries"]
+        dealerships = json_result["body"]
         for dealer in dealerships:
             car_dealer = CarDealer(id=dealer["id"],
                                    city=dealer["city"],
