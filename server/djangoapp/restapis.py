@@ -83,16 +83,16 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
     if json_result:
         for dealer_doc in json_result:
             dealer_obj = CarDealer(
-                address=dealer_doc["address"],
-                city=dealer_doc["city"],
-                full_name=dealer_doc["full_name"],
                 id=dealer_doc["id"],
-                lat=dealer_doc["lat"],
-                long=dealer_doc["long"],
-                short_name=dealer_doc["short_name"],
-                st=dealer_doc["st"],
-                zip=dealer_doc["zip"]
-                )
+                address=dealer_doc.get("address"),
+                city=dealer_doc.get("city"),
+                full_name=dealer_doc.get("full_name"),
+                lat=dealer_doc.get("lat"),
+                long=dealer_doc.get("long"),
+                short_name=dealer_doc.get("short_name"),
+                st=dealer_doc.get("st"),
+                zip=dealer_doc.get("zip"),  
+            )
             results.append(dealer_obj)
     return results
 

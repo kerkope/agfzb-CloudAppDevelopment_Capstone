@@ -1,4 +1,6 @@
-{% include "template/template.html" %}
+{% extends "djangoapp/head.html" %}
+
+{% block content  %}
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">About Us!</h1>
@@ -7,3 +9,4 @@
         </p>
     </div>
 </div>
+{% endblock content %}

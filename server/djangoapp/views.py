@@ -9,7 +9,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from .models import CarDealer, CarMake, CarModel
-from .restapis import (URL_API, get_dealer_by_id, get_dealer_reviews_from_cf, get_dealers_from_cf, post_request)
+from .restapis import (get_dealer_by_id, get_dealer_reviews_from_cf, get_dealers_from_cf, post_request)
 
 logger = logging.getLogger(__name__)
 

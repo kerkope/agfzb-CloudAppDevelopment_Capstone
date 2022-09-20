@@ -1,5 +1,6 @@
-{% include "template/template.html" %}
+{% extends "djangoapp/head.html" %}
 
+{% block content %}
 <title>Available Vehicles</title>
 
 <table class="table" id="table" data-filter-control="true">
@@ -34,3 +35,4 @@
       $('#table').bootstrapTable()
     })
   </script>
+{% endblock content %}

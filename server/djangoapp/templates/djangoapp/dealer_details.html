@@ -8,7 +8,50 @@
 </head>
 
     <body>
-
+        <div class="container">
+            <h1>Reviews for {{dealer_name}}</h1>
+        {% if reviews %}
+        <div class="card-columns">
+            {% for review in reviews %}       
+                <div class="card" >    
+                    <div class="card-header text-center">
+                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" width="40" height="40">
+                    </div>          
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{review.name}}</h5>
+                        <p class="card-text">{{review.review}}</p>
+                    </div>
+                    <div class="card-footer text-muted text-center" style="min-height: 74px;">
+                    {% if review.purchase == True %}   
+                        {{review.car_year}} {{review.car_make}} {{review.car_model}}
+                        <br>
+                        Purchase date: {{review.purchase_date}}
+                    {% else %}
+                        No Purchases.
+                    {% endif %}
+                    </div>
+                </div>            
+                {% endfor %}  
+            </div>   
+        {% else %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">No Reviews</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-center">There are no Reviews</p>
+                </div>                 
+            </div>
+            {% endif %}
+              
+            {% if user.is_authenticated %} 
+            <div class="card ">
+                <div class="card-body text-center">
+                    <a class="btn btn-primary" type="submit" href="{% url 'djangoapp:add_review' dealer_id %}">Add a new Review</a>               
+                </div>            
+            </div>
+            {% endif %}
+        </div>
 
     </body>
 

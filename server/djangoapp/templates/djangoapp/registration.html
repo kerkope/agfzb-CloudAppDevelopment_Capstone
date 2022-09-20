@@ -1,4 +1,6 @@
-{% include "template/template.html" %}
+{% extends "djangoapp/head.html" %}
+
+{% block content %}
   <div class="container">
       <form class="form" action="{% url 'djangoapp:registration' %}" method="post">
         {% csrf_token %}
@@ -21,3 +23,4 @@
             <button class="btn btn-primary" type="submit">Sign Up Now</button>
       </form>
   </div>
+  {% endblock content %}

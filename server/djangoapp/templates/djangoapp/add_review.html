@@ -1,4 +1,6 @@
-{% include "template/template.html" %}
+{% extends "djangoapp/head.html" %}
+
+{% block content %}
 <div class="container">
     <form action="{% url 'djangoapp:add_review' dealer.id %}" method="post">
         <div class="form-group">
@@ -29,3 +31,4 @@
        format: 'mm/dd/yyyy'
     });
 </script>
+{% endblock content %}
