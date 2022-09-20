@@ -1,34 +1,33 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey
 from django.utils.timezone import now
-from django.core import serializers 
-import uuid
-import json
+
+from enum import Enum
 
 class CarMake(models.Model):
-    name = models.CharField(null= False, max_length=30)
-    description = models.CharField(null= False, max_length=300)
-
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=127)
+    description = models.CharField(max_length=511)
     def __str__(self):
-        return 'Name:' + self.name + ',' + \
-            'Description:' + self.description
-
+        return '<CarMake: ' + self.name + '>'
 
 class CarModel(models.Model):
-    TYPES = (
-            ("SEDAN", "Sedan"), ("SUV", "SUV"), ("WAGON", "Wagon"), ("LIMOUSINE", "Limousine"), ("BATMOBILE", "Batmobile")
-        )
-    make = models.ForeignKey(CarMake, null=False, on_delete=models.CASCADE)  
-    name = models.CharField(null=False, max_length=30)
-    c_type = models.CharField(max_length=30, choices=TYPES)
-    dealer_id = models.IntegerField()
+    id = models.AutoField(primary_key=True)
+    make = ForeignKey(CarMake, on_delete=CASCADE)
+    name = models.CharField(max_length=127)
+    dealer_id = models.PositiveIntegerField()
+    type = models.CharField(max_length=31, choices=(
+        ('suv', 'SUV'), 
+        ('sedan', 'Sedan'),
+        ('wagon', 'WAGON'),
+        ('coupe', 'Coupe'),
+        ('hatchback', 'Hatchback'),
+        ('compact', 'Compact')
+    ))
     year = models.DateField()
-
     def __str__(self):
-        return "Name: " + self.name + \
-                " Make Name: "+ self.make.name + \
-                " Type: " + self.c_type + \
-                " Dealer ID: " + str(self.dealer_id)+ \
-                " Year: " + str(self.year)
+        return '<CarModel: ' + self.make.name + ': ' + self.name + '>'
 
 class CarDealer:
     def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
@@ -46,36 +45,28 @@ class CarDealer:
         return "Dealer name: " + self.full_name
 
 class DealerReview:
-    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year,sentiment, id):
-        self.dealership=dealership
-        self.name=name
-        self.purchase=purchase
-        self.review=review
-        self.purchase_date=purchase_date
-        self.car_make=car_make
-        self.car_model=car_model
-        self.car_year=car_year
-        self.sentiment=sentiment 
-        self.id=id
-
+    def __init__(
+        self,
+        id,
+        dealership,
+        review,
+        name=None,
+        purchase=None,
+        purchase_date=None,
+        car_make=None,
+        car_model=None,
+        car_year=None,
+        sentiment=None
+        ):
+        self.id = id
+        self.dealership = dealership
+        self.review = review
+        self.name = name
+        self.purchase = purchase
+        self.purchase_date = purchase_date
+        self.car_make = car_make
+        self.car_model = car_model
+        self.car_year = car_year
+        self.sentiment = sentiment
     def __str__(self):
-        return "Review: " + self.review +\
-                " Sentiment: " + self.sentiment
-
-class ReviewPost:
-
-    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year,sentiment, id):
-        self.dealership=dealership
-        self.name=name
-        self.purchase=purchase
-        self.review=review
-        self.purchase_date=purchase_date
-        self.car_make=car_make
-        self.car_model=car_model
-        self.car_year=car_year
-        self.sentiment=sentiment 
-        self.id=id
-
-    def __str__(self):
-        return "Review: " + self.review +\
-                " Sentiment: " + self.sentiment
+        return f"DealerReview ({str(self.id)}) [{self.sentiment}] {self.review}"

@@ -1,111 +1,140 @@
-import requests
-import os
 import json
-from .models import *
+import os
+import requests
 from requests.auth import HTTPBasicAuth
+from .models import CarDealer, DealerReview
 
-API_URL_DEALERSHIP_GET = "https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_djangoserver-space/CarDealership/get-dealerships"
-API_URL_REVIEW_GET = 'https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/5e2f7a8e6a9a514ec9998a8e70b88a0ce293fd848df7539953e8b384663236ac/api/api/reviews/entries'
-API_URL_REVIEW_POST = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_djangoserver-space/CarDealership/post-reviews'
-API_URL_DEALERSHIP_ADD = "https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_djangoserver-space/CarDealership/get-dealerships"
-API_URL_SENTIMENT = 'https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'
+GET_DEALERSHIP_ACTION = ''.join(['https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get_dealerships'])
 
-# Create a `get_request` to make HTTP GET requests
+GET_REVIEWS_ACTION = ''.join(['https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-reviews'])
+
+WATSON_URL = ''.join(['https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'])
+
+WATSON_API_KEY = os.environ.get('WATSON_API_KEY')
+
 def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
     try:
-        response = requests.get(
-            url, headers={'Content-Type': 'application/json'}, params=kwargs)
+        if 'api_key' in kwargs.keys():
+            api_key = kwargs['api_key']
+            del(kwargs['api_key'])
+            response = requests.get(
+                url,
+                headers={
+                    'Content-Type': 'application/json'
+                },
+                auth=HTTPBasicAuth('apikey', api_key),
+                params=kwargs
+                )
+        else:
+            response = requests.get(
+                url,
+                headers={
+                    'Content-Type': 'application/json'
+                },
+                params=kwargs
+                )
     except:
         print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
-# Create a `post_request` to make HTTP POST requests
 def post_request(url, json_payload, **kwargs):
-    """ Post"""
+    print(kwargs)
+    print("POST from {} ".format(url))
     try:
-        response = requests.post(url, json=json_payload, params=kwargs)
+        if 'api_key' in kwargs.keys():
+            #api_key in params, use auth
+            api_key = kwargs['api_key']
+            del(kwargs['api_key'])
+            response = requests.post(
+                url,
+                headers={
+                    'Content-Type': 'application/json'
+                },
+                auth=HTTPBasicAuth('apikey', api_key),
+                params=kwargs,
+                json=json_payload
+                )
+        else:
+            response = requests.post(
+                url,
+                headers={
+                    'Content-Type': 'application/json'
+                },
+                params=kwargs,
+                json=json_payload
+                )
     except:
         print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    #print(response.text)
+    #print(response.request.path_url)
     json_data = json.loads(response.text)
-    return json_data
+    return response.json()
 
-# Create a get_dealers_from_cf method to get dealers from a cloud function
-def get_dealerships_from_cf():
-    """ Get Dealerships"""
+def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
     results = []
-    json_result = get_request(API_URL_DEALERSHIP_GET)
+    json_result = get_request(url + '/dealership', **kwargs)
     if json_result:
-        dealerships = json_result["body"]
-        for dealer in dealerships:
-            car_dealer = CarDealer(id=dealer["id"],
-                                   city=dealer["city"],
-                                   state=dealer["state"],
-                                   st=dealer["st"],
-                                   address=dealer["address"],
-                                   zip=dealer["zip"],
-                                   lat=dealer["lat"],
-                                   long=dealer["long"],
-                                   short_name=dealer["short_name"],
-                                   full_name=dealer["full_name"])
-            results.append(car_dealer)
+        for dealer_doc in json_result:
+            dealer_obj = CarDealer(
+                address=dealer_doc["address"],
+                city=dealer_doc["city"],
+                full_name=dealer_doc["full_name"],
+                id=dealer_doc["id"],
+                lat=dealer_doc["lat"],
+                long=dealer_doc["long"],
+                short_name=dealer_doc["short_name"],
+                st=dealer_doc["st"],
+                zip=dealer_doc["zip"]
+                )
+            results.append(dealer_obj)
     return results
 
-# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-def get_dealer_reviews_from_cf(dealerId):
-    """ Get Reviews"""
-    results = []
-    json_result = get_request(API_URL_REVIEW_GET, dealerId=dealerId)
-    if json_result:
-        reviews = json_result["entries"]
-        for review in reviews:
-            sentiment = analyze_review_sentiments(review["review"])
-            if(review["purchase"]):
-                dealer_review = DealerReview(id=review["id"],
-                                            dealership=review["dealership"],
-                                            review=review["review"],
-                                            purchase=review["purchase"],
-                                            purchase_date=review['purchase_date'],
-                                            car_make=review["car_make"],
-                                            car_model=review["car_model"],
-                                            car_year=review["car_year"],
-                                            sentiment=sentiment)
-                results.append(dealer_review)
-            else:
-                dealer_review = DealerReview(id=review["id"],
-                                            dealership=review["dealership"],
-                                            review=review["review"],
-                                            purchase=review["purchase"],
-                                            purchase_date="01/01/0000",
-                                            car_make="None",
-                                            car_model="None",
-                                            car_year="None",
-                                            sentiment=sentiment)
-                results.append(dealer_review)
-    return results
+def get_dealer_by_id(dealerId, url = GET_DEALERSHIP_ACTION):
+    url = url + '/dealership'
+    return get_dealers_from_cf(url, id = dealerId)[0]
 
-def add_dealer_review_to_db(review_post):
-    """ Add Review """
-    review = {
-        "id": review_post['review_id'],
-        "dealership": review_post['dealership'],
-        "review": review_post['review'],
-        "purchase": review_post.get('purchase', False),
-        "purchase_date": review_post.get('purchase_date'),
-        "car_make": review_post.get('car_make'),
-        "car_model": review_post.get('car_model'),
-        "car_year": review_post.get('car_year')
-    }
-    return post_request(API_URL_REVIEW_POST, review)
+def get_dealer_by_state(state, url = GET_DEALERSHIP_ACTION):
+    url = url + '/dealership'
+    return get_dealers_from_cf(url, state=state)
 
+def get_dealer_reviews_from_cf(dealerId, url = GET_REVIEWS_ACTION):
+    def json_to_dealer_review(data):
+        return DealerReview(
+            id=data.get('id', ''),
+            dealership=data['dealership'],
+            review=data['review'],
+            name=data.get('name', ''),
+            purchase=data.get('purchase', ''),
+            purchase_date=data.get('purchase_date', ''),
+            car_make=data.get('car_make', ''),
+            car_model=data.get('car_model', ''),
+            car_year=data.get('car_year', ''),
+            sentiment=analyze_review_sentiments(text=data['review'])
+            )
+    url = url + '/review'
+    json_result = get_request(url, dealerId=dealerId)
+    if len(json_result) > 0:
+        reviews = list(map(json_to_dealer_review, json_result))
+        return reviews
+    return []
 
-# Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-def analyze_review_sentiments(text):
-    url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c"
-    api_key = "nbj6fo223FOo7gW_L0cHpR4_zaMv80O8A21RkxI04ecs"
-    json_result = get_request(API_URL_SENTIMENT, text=text)
-    if json_result:
-        sentiment_result = json_result.get('label', 'neutral')
-    return sentiment_result 
+def analyze_review_sentiments(**kwargs):
+    URL = WATSON_URL + '/v1/analyze'
+    params = dict()
+    params["text"] = kwargs["text"]
+    params["version"] = '2021-03-25'
+    params["features"] = 'sentiment'
+    params["return_analyzed_text"] = 'false'
+    params["api_key"] = WATSON_API_KEY
+    response = get_request(
+        URL,
+        **params
+    )
+    return response["sentiment"]["document"]["label"]
