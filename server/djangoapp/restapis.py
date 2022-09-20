@@ -10,7 +10,7 @@ GET_REVIEWS_ACTION = ''.join(['https://us-south.functions.appdomain.cloud/api/v1
 
 WATSON_URL = ''.join(['https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'])
 
-WATSON_API_KEY = os.environ.get('WATSON_API_KEY')
+WATSON_API_KEY = 'nbj6fo223FOo7gW_L0cHpR4_zaMv80O8A21RkxI04ecs'
 
 def get_request(url, **kwargs):
     print(kwargs)
