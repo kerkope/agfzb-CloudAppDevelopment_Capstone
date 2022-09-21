@@ -4,11 +4,11 @@ import requests
 from requests.auth import HTTPBasicAuth
 from .models import CarDealer, DealerReview
 
-GET_DEALERSHIP_ACTION = ''.join(['https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get_dealerships'])
+GET_DEALERSHIP_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get_dealerships'
 
-GET_REVIEWS_ACTION = ''.join(['https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-reviews'])
+GET_REVIEWS_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-reviews'
 
-WATSON_URL = ''.join(['https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'])
+WATSON_URL = 'https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'
 
 WATSON_API_KEY = 'nbj6fo223FOo7gW_L0cHpR4_zaMv80O8A21RkxI04ecs'
 
@@ -55,7 +55,6 @@ def post_request(url, json_payload, **kwargs):
                 headers={
                     'Content-Type': 'application/json'
                 },
-                auth=HTTPBasicAuth('apikey', api_key),
                 params=kwargs,
                 json=json_payload
                 )
@@ -83,7 +82,7 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
     if json_result:
         for dealer_doc in json_result:
             dealer_obj = CarDealer(
-                id=dealer_doc["id"],
+                id=dealer_doc['id'],
                 address=dealer_doc.get("address"),
                 city=dealer_doc.get("city"),
                 full_name=dealer_doc.get("full_name"),
@@ -96,30 +95,30 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
             results.append(dealer_obj)
     return results
 
-def get_dealer_by_id(dealerId, url = GET_DEALERSHIP_ACTION):
+def get_dealer_by_id(dealer_id, url = GET_DEALERSHIP_ACTION):
     url = url + '/dealership'
-    return get_dealers_from_cf(url, id = dealerId)[0]
+    return get_dealers_from_cf(url, id = dealer_id)[0]
 
 def get_dealer_by_state(state, url = GET_DEALERSHIP_ACTION):
     url = url + '/dealership'
     return get_dealers_from_cf(url, state=state)
 
-def get_dealer_reviews_from_cf(dealerId, url = GET_REVIEWS_ACTION):
+def get_dealer_reviews_from_cf(dealer_id, url = GET_REVIEWS_ACTION):
     def json_to_dealer_review(data):
         return DealerReview(
-            id=data.get('id', ''),
-            dealership=data['dealership'],
-            review=data['review'],
-            name=data.get('name', ''),
-            purchase=data.get('purchase', ''),
-            purchase_date=data.get('purchase_date', ''),
-            car_make=data.get('car_make', ''),
-            car_model=data.get('car_model', ''),
-            car_year=data.get('car_year', ''),
+            id=data['id'],
+            dealership=data.get('dealership'),
+            review=data.get('review'),
+            name=data.get('name'),
+            purchase=data.get('purchase'),
+            purchase_date=data.get('purchase_date'),
+            car_make=data.get('car_make'),
+            car_model=data.get('car_model'),
+            car_year=data.get('car_year'),
             sentiment=analyze_review_sentiments(text=data['review'])
             )
     url = url + '/review'
-    json_result = get_request(url, dealerId=dealerId)
+    json_result = get_request(url, dealer_id=dealer_id)
     if len(json_result) > 0:
         reviews = list(map(json_to_dealer_review, json_result))
         return reviews
