@@ -13,21 +13,11 @@ WATSON_URL = 'https://api.us-east.natural-language-understanding.watson.cloud.ib
 WATSON_API_KEY = 'nbj6fo223FOo7gW_L0cHpR4_zaMv80O8A21RkxI04ecs'
 
 def get_request(url, **kwargs):
+
     print(kwargs)
     print("GET from {} ".format(url))
+    response = work
     try:
-        if 'api_key' in kwargs.keys():
-            api_key = kwargs['api_key']
-            del(kwargs['api_key'])
-            response = requests.get(
-                url,
-                headers={
-                    'Content-Type': 'application/json'
-                },
-                auth=HTTPBasicAuth('apikey', api_key),
-                params=kwargs
-                )
-        else:
             response = requests.get(
                 url,
                 headers={
@@ -76,23 +66,30 @@ def post_request(url, json_payload, **kwargs):
     json_data = json.loads(response.text)
     return response.json()
 
-def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
+def get_dealers_from_cf(url = "GET_DEALERSHIP_ACTION", **kwargs):
     results = []
-    json_result = get_request(url + '/dealership', **kwargs)
+    state = kwargs.get("state")
+    if state:
+        json_result = get_request(url, state=state)
+    else:
+        json_result = get_request(url)
+
     if json_result:
-        for dealer_doc in json_result:
+        dealers = json_result["body"]
+        for dealer in dealers:
+            dealer_doc = dealer["doc"]
             dealer_obj = CarDealer(
-                id=dealer_doc['id'],
-                address=dealer_doc.get("address"),
+                address=dealer_doc.get("address"), 
                 city=dealer_doc.get("city"),
-                full_name=dealer_doc.get("full_name"),
-                lat=dealer_doc.get("lat"),
+                full_name=dealer_doc.get("full_name"), 
+                id=dealer_doc.get("id"), 
+                lat=dealer_doc.get("lat"), 
                 long=dealer_doc.get("long"),
-                short_name=dealer_doc.get("short_name"),
-                st=dealer_doc.get("st"),
-                zip=dealer_doc.get("zip"),  
+                st=dealer_doc.get("st"), 
+                zip=dealer_doc.get("zip")
             )
             results.append(dealer_obj)
+
     return results
 
 def get_dealer_by_id(dealer_id, url = GET_DEALERSHIP_ACTION):
@@ -106,7 +103,7 @@ def get_dealer_by_state(state, url = GET_DEALERSHIP_ACTION):
 def get_dealer_reviews_from_cf(dealer_id, url = GET_REVIEWS_ACTION):
     def json_to_dealer_review(data):
         return DealerReview(
-            id=data['id'],
+            id=data.get('id'),
             dealership=data.get('dealership'),
             review=data.get('review'),
             name=data.get('name'),

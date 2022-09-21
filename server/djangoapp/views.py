@@ -21,7 +21,7 @@ def contact(request):
     if request.method == "GET":
         return render(request, 'djangoapp/contact.html', {})
 
-def login(request):
+def login_request(request):
     context = {}
     if request.method == "POST":
         username = request.POST['username']
@@ -35,12 +35,12 @@ def login(request):
     else:
         return redirect('djangoapp:index')
 
-def logout(request):
+def logout_request(request):
     print("Log out the user `{}`".format(request.user.username))
     logout(request)
     return redirect('djangoapp:index')
 
-def registration(request):
+def registration_request(request):
     context = {}
     if request.method == 'GET':
         return render(request, 'djangoapp/registration.html', context)
