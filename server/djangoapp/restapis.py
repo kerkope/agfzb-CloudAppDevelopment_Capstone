@@ -59,24 +59,24 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
         json_result = get_request(url)
 
     if json_result:
-        dealers = json_result["body"]
+        dealers = json_result[1]
         for dealer in dealers:
             dealer_doc = dealer["doc"]
             dealer_obj = CarDealer(
-                address=dealer_doc.get("address"), 
-                city=dealer_doc.get("city"),
-                full_name=dealer_doc.get("full_name"), 
-                id=dealer_doc.get("id"), 
-                lat=dealer_doc.get("lat"), 
-                long=dealer_doc.get("long"),
-                st=dealer_doc.get("st"), 
-                zip=dealer_doc.get("zip")
+                address=dealer_doc["address"], 
+                city=dealer_doc["city"],
+                full_name=dealer_doc["full_name"], 
+                id=dealer_doc["id"], 
+                lat=dealer_doc["lat"], 
+                long=dealer_doc["long"],
+                st=dealer_doc["st"], 
+                zip=dealer_doc["zip"]
             )
             results.append(dealer_obj)
 
     return results
 
-def get_dealer_by_id(dealer_id, url = GET_DEALERSHIP_ACTION):
+def get_dealer_by_id(id, url = GET_DEALERSHIP_ACTION):
     url = url + '/dealership'
     return get_dealers_from_cf(url, id = dealer_id)[0]
 
@@ -84,7 +84,7 @@ def get_dealer_by_state(state, url = GET_DEALERSHIP_ACTION):
     url = url + '/dealership'
     return get_dealers_from_cf(url, state=state)
 
-def get_dealer_reviews_from_cf(dealer_id, url = GET_REVIEWS_ACTION):
+def get_dealer_reviews_from_cf(id, url = GET_REVIEWS_ACTION):
     def json_to_dealer_review(data):
         return DealerReview(
             id=data.get('id'),
