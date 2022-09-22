@@ -9,8 +9,6 @@ import time
 
 GET_ALL_DEALERSHIP_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-all-dealerships'
 
-GET_DEALERS = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-dealers'
-
 GET_REVIEWS_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-reviews'
 
 WATSON_URL = 'https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/c008aa68-1634-4a30-8259-981c9bbf977c'
@@ -52,7 +50,7 @@ def post_request(url, json_payload, **kwargs):
     json_data = json.loads(response.text)
     return response.json()
 
-def get_dealers_from_cf(url = GET_DEALERS, **kwargs):
+def get_dealers_from_cf(url = GET_ALL_DEALERSHIP_ACTION, **kwargs):
     results = []
     state = kwargs.get("state")
     if state:
