@@ -1,8 +1,11 @@
-import json
-import os
 import requests
-from requests.auth import HTTPBasicAuth
+import json
 from .models import CarDealer, DealerReview
+from requests.auth import HTTPBasicAuth
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_watson.natural_language_understanding_v1 import Features,SentimentOptions
+import time
 
 GET_DEALERSHIP_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get_dealerships'
 
@@ -12,25 +15,6 @@ WATSON_URL = 'https://api.us-east.natural-language-understanding.watson.cloud.ib
 
 WATSON_API_KEY = 'nbj6fo223FOo7gW_L0cHpR4_zaMv80O8A21RkxI04ecs'
 
-def get_request(url, **kwargs):
-
-    print(kwargs)
-    print("GET from {} ".format(url))
-    response = work
-    try:
-            response = requests.get(
-                url,
-                headers={
-                    'Content-Type': 'application/json'
-                },
-                params=kwargs
-                )
-    except:
-        print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
 
 def post_request(url, json_payload, **kwargs):
     print(kwargs)
@@ -66,7 +50,7 @@ def post_request(url, json_payload, **kwargs):
     json_data = json.loads(response.text)
     return response.json()
 
-def get_dealers_from_cf(url = "GET_DEALERSHIP_ACTION", **kwargs):
+def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
     results = []
     state = kwargs.get("state")
     if state:
@@ -134,3 +118,28 @@ def analyze_review_sentiments(**kwargs):
         **params
     )
     return response["sentiment"]["document"]["label"]
+
+def get_request(url, **kwargs):
+    
+    api_key = kwargs.get("api_key")
+    print("GET from {} ".format(url))
+    try:
+        if api_key:
+            params = dict()
+            params["text"] = kwargs["text"]
+            params["version"] = kwargs["version"]
+            params["features"] = kwargs["features"]
+            params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+        else:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
