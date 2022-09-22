@@ -73,21 +73,21 @@ def get_dealerships(request):
         context['dealership_list'] = get_dealers_from_cf()
         return render(request, 'djangoapp/index.html', context)
 
-def get_dealer_details(request, dealer_id):
+def get_dealer_details(request, id):
     if request.method == "GET":
         context = {}
-        context['reviews'] = get_dealer_reviews_from_cf(dealer_id)
-        context['dealer'] = get_dealer_by_id(dealer_id)
+        context['reviews'] = get_dealer_reviews_from_cf(id)
+        context['dealer'] = get_dealer_by_id(id)
         return render(request, 'djangoapp/dealer_details.html', context)
 
 @csrf_exempt
-def add_review(request, dealer_id):
+def add_review(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             review = {}
             form = request.POST
             review["time"] = datetime.utcnow().isoformat()
-            review["dealership"] = dealer_id
+            review["dealership"] = id
             review["review"] = form.get('content', '')
             if form.get('purchasecheck', 'off') == 'on':
                 review["purchase"] = True
@@ -100,13 +100,13 @@ def add_review(request, dealer_id):
             review["name"] = request.user.username
             payload = {'review': review}
             add_response = post_request(URL_API+'/review', json_payload=payload)
-            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+            return redirect("djangoapp:dealer_details", id=id)
         else:
             response = HttpResponse('You need to authenticate!')
             response.status_code = 401
             return response
     elif request.method == "GET":
         context = {}
-        context['cars'] = list(CarModel.objects.filter(dealer_id = dealer_id))
-        context['dealer'] = get_dealer_by_id(dealer_id)
+        context['cars'] = list(CarModel.objects.filter(id = id))
+        context['dealer'] = get_dealer_by_id(id)
         return render(request, 'djangoapp/add_review.html', context)

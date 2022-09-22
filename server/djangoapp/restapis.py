@@ -7,7 +7,9 @@ from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 import Features,SentimentOptions
 import time
 
-GET_DEALERSHIP_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get_dealerships'
+GET_ALL_DEALERSHIP_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-all-dealerships'
+
+GET_DEALERS = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-dealers'
 
 GET_REVIEWS_ACTION = 'https://us-south.functions.appdomain.cloud/api/v1/web/HunterSchwager_Final%20Project/CarDealership/get-reviews'
 
@@ -50,7 +52,7 @@ def post_request(url, json_payload, **kwargs):
     json_data = json.loads(response.text)
     return response.json()
 
-def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
+def get_dealers_from_cf(url = GET_DEALERS, **kwargs):
     results = []
     state = kwargs.get("state")
     if state:
@@ -59,7 +61,7 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
         json_result = get_request(url)
 
     if json_result:
-        dealers = json_result[1]
+        dealers = json_result['body']
         for dealer in dealers:
             dealer_doc = dealer["doc"]
             dealer_obj = CarDealer(
@@ -76,11 +78,11 @@ def get_dealers_from_cf(url = GET_DEALERSHIP_ACTION, **kwargs):
 
     return results
 
-def get_dealer_by_id(id, url = GET_DEALERSHIP_ACTION):
+def get_dealer_by_id(id, url = GET_ALL_DEALERSHIP_ACTION):
     url = url + '/dealership'
-    return get_dealers_from_cf(url, id = dealer_id)[0]
+    return get_dealers_from_cf(url, id = id)[0]
 
-def get_dealer_by_state(state, url = GET_DEALERSHIP_ACTION):
+def get_dealer_by_state(state, url = GET_ALL_DEALERSHIP_ACTION):
     url = url + '/dealership'
     return get_dealers_from_cf(url, state=state)
 
@@ -99,7 +101,7 @@ def get_dealer_reviews_from_cf(id, url = GET_REVIEWS_ACTION):
             sentiment=analyze_review_sentiments(text=data['review'])
             )
     url = url + '/review'
-    json_result = get_request(url, dealer_id=dealer_id)
+    json_result = get_request(url, id=id)
     if len(json_result) > 0:
         reviews = list(map(json_to_dealer_review, json_result))
         return reviews
